@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Store Review System</title>
+<style>
+body { font-family: sans-serif; background-color: #f4f1ea; display: flex; flex-direction: column; align-items: center; padding: 40px; }
+.image-box { width: 500px; height: 300px; background-color: #ddd; border: 2px dashed #999; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.2em; }
+.credit { font-size: 18px; margin-bottom: 30px; color: #333; }
+.review-card { background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 500px; margin-bottom: 40px; }
+.stars { font-size: 40px; cursor: pointer; color: #ccc; margin: 20px 0; }
+.stars .active { color: #ffd700; }
+button { background: black; color: white; padding: 15px 30px; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+.modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; }
+input, textarea { width: 100%; margin: 10px 0; padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-sizing: border-box; }
+.review-item { background: white; padding: 25px; border-radius: 15px; margin-top: 20px; width: 500px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: left; }
+.review-img { max-width: 100%; height: auto; border-radius: 10px; margin-top: 10px; }
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+const firebaseConfig = { databaseURL: "https://save-review-54d0b-default-rtdb.firebaseio.com/" };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let currentRating = 0;
+let imageBase64 = "";
+
+window.setRating = (r) => {
+currentRating = r;
+document.querySelectorAll('#star-rating span').forEach((s, i) => s.className = i < r ? 'active' : '');
+};
+
+window.handleImage = (input) => {
+const reader = new FileReader();
+reader.onload = (e) => { imageBase64 = e.target.result; };
+reader.readAsDataURL(input.files[0]);
+};
+
+window.openModal = () => document.getElementById('modal').style.display = 'flex';
+
+window.submitReview = () => {
+const title = document.getElementById('rev-title').value;
+const body = document.getElementById('rev-body').value;
+const name = document.getElementById('rev-name').value;
+
+if(!name || !body) { alert("กรุณากรอกข้อมูลให้ครบ"); return; }
+
+push(ref(db, 'reviews/'), { title, body, name, rating: currentRating, image: imageBase64 });
+
+document.getElementById('modal').style.display = 'none';
+imageBase64 = "";
+document.getElementById('rev-title').value = '';
+document.getElementById('rev-body').value = '';
+document.getElementById('rev-name').value = '';
+setRating(0);
+};
+
+// ฟังก์ชันลบรีวิวพร้อมรหัสผ่าน
+window.removeReview = (key) => {
+const password = prompt("กรุณากรอกรหัสผ่านเพื่อลบรีวิว:");
+if (password === "1256") {
+remove(ref(db, 'reviews/' + key));
+} else if (password !== null) {
+alert("รหัสผ่านไม่ถูกต้อง");
+}
+};
+
+onValue(ref(db, 'reviews/'), (snapshot) => {
+const container = document.getElementById('reviews-container');
+container.innerHTML = '';
+snapshot.forEach((childSnapshot) => {
+const r = childSnapshot.val();
+const key = childSnapshot.key;
+const div = document.createElement('div');
+div.className = 'review-item';
+div.innerHTML = &lt;strong&gt;${r.title}</strong><br>
+คะแนน: ${r.rating} ดาว&lt;br&gt; &lt;p&gt;${r.body}</p>
+${r.image ?: ''} &lt;br&gt;&lt;small&gt;โดย:${r.name}</small>
+<br><button onclick="removeReview('${key}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-top:10px;">ลบรีวิว</button>
+`;
+container.appendChild(div);
+});
+});
+</script>
+
+// ฟังก์ชันอ่านไฟล์รูปเป็น Base64
+window.handleImage = (input) => {
+const reader = new FileReader();
+reader.onload = (e) => { imageBase64 = e.target.result; };
+reader.readAsDataURL(input.files[0]);
+};
+
+window.openModal = () => document.getElementById('modal').style.display = 'flex';
+
+window.submitReview = () => {
+const title = document.getElementById('rev-title').value;
+const body = document.getElementById('rev-body').value;
+const name = document.getElementById('rev-name').value;
+
+if(!name || !body) { alert("กรุณากรอกข้อมูลให้ครบ"); return; }
+
+push(ref(db, 'reviews/'), { title, body, name, rating: currentRating, image: imageBase64 });
+
+document.getElementById('modal').style.display = 'none';
+imageBase64 = ""; // Reset
+};
+
+onValue(ref(db, 'reviews/'), (snapshot) => {
+const container = document.getElementById('reviews-container');
+container.innerHTML = '';
+const data = snapshot.val();
+if (data) {
+Object.values(data).forEach(r => {
+const div = document.createElement('div');
+div.className = 'review-item';
+div.innerHTML = <strong&gt;${r.title}</strong><br>คะแนน: ${r.rating} ดาว&lt;br&gt;&lt;p&gt;${r.body}</p>${r.image ?: ''}&lt;br&gt;&lt;small&gt;โดย:${r.name}</small>`;
+container.appendChild(div);
+});
+}
+});
+</script>
+</head>
+<body>
+
+<div class="image-box">ใส่รูปหน้าเว็บที่นี่</div>
+<div class="credit">⁺‧⊹ ࣪ ˖ 🖤₊˚ ⋆ 𝒄𝒓𝒆𝒅𝒊𝒕 𝒇𝒐𝒓 𝒑𝒂𝒕𝒕𝒊𝒓𝒂 だ ⋆ ˚🕸️๋࣭ ⭑ ‧⁺</div>
+
+<div class="review-card">
+<h3>review my store</h3>
+<p>เลือกคะแนนจาก 1 ถึง 5</p>
+<div class="stars" id="star-rating">
+<span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+</div>
+<button onclick="openModal()">click here for me!</button>
+</div>
+
+<div id="reviews-container"></div>
+
+<div id="modal" class="modal">
+<div class="modal-content">
+<h3>ฝากรีวิว</h3>
+<input type="text" id="rev-title" placeholder="ชื่อรีวิว">
+<textarea id="rev-body" placeholder="เขียนคำติชมที่ซื่อสัตย์ของคุณ ..."></textarea>
+<input type="text" id="rev-name" placeholder="ชื่อของคุณ ">
+<p>อัปโหลดรูปภาพรีวิว:</p>
+<input type="file" accept="image/" onchange="handleImage(this)">
+<button onclick="submitReview()" style="width: 100%;">ส่ง</button>
+</div>
+</div>
+</body>
+</html>
