@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Link Bio</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 20px; /* จัดรูปให้อยู่ตรงกลาง */
+        }
+        h1 { font-size: 24px; color: #333; }
+        
+        .link-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .link-button {
+            display: block;
+            background-color: #fff;
+            padding: 15px;
+            margin: 15px 0;
+            text-decoration: none;
+            color: #333;
+            border: 2px solid #333;
+            border-radius: 50px; /* ปรับให้ปุ่มมนขึ้น */
+            font-weight: bold;
+            transition: all 0.3s ease; /* ปรับการเปลี่ยนสถานะให้สมูท */
+        }
+
+        /* อนิเมชั่นเมื่อเอาเมาส์ไปชี้ */
+        .link-button:hover {
+            background-color: #333;
+            color: #fff;
+            transform: scale(1.05); /* ขยายปุ่มเล็กน้อย */
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        /* อนิเมชั่น Pulse (จังหวะหายใจ) */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+            border-color: #ff4757; /* เปลี่ยนสีขอบให้โดดเด่น */
+            color: #ff4757;
+        }
+        
+        .animate-pulse:hover {
+            background-color: #ff4757;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-img"></div>
+    <h1>ชื่อของคุณหรือชื่อร้าน</h1>
+
+    <div class="link-container">
+        <!-- ใส่ class="animate-pulse" สำหรับปุ่มที่ต้องการเน้นเป็นพิเศษ -->
+        <a href="https://line.me" class="link-button animate-pulse">สั่งซื้อสินค้าทาง LINE</a>
+        
+        <a href="https://facebook.com" class="link-button">Facebook</a>
+        <a href="https://instagram.com" class="link-button">Instagram</a>
+        <a href="https://shopee.co.th" class="link-button">Shopee</a>
+    </div>
+
+</body>
+</html>
