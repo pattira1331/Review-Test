@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jaolove.studio16</title>
+<style>
+body {
+font-family: 'Arial', sans-serif;
+background-color: #fefcf0;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 20px;
+margin: 0;
+color: #555;
+}
+.banner {
+width: 100%;
+max-width: 400px;
+height: auto;
+border-radius: 15px;
+margin-bottom: 20px;
+}
+.info {
+text-align: center;
+margin-bottom: 20px;
+}
+.card {
+background-color: white;
+border: 2px solid #b22222;
+border-radius: 20px;
+padding: 20px;
+width: 90%;
+max-width: 350px;
+text-align: center;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.stars {
+font-size: 30px;
+color: #d3d3d3;
+cursor: pointer;
+margin: 15px 0;
+}
+.stars span.active {
+color: #ffcc00;
+}
+.submit-btn {
+background-color: #dce775;
+border: none;
+padding: 10px 20px;
+border-radius: 10px;
+font-size: 16px;
+cursor: not-allowed;
+opacity: 0.6;
+}
+.submit-btn.enabled {
+cursor: pointer;
+opacity: 1;
+}
+</style>
+</head>
+<body>
+
+<img src="https://via.placeholder.com/400x200?text=Banner+Image" alt="Banner" class="banner">
+
+<div class="info">
+<h1>⁺‧⊹ ࣪ ˖ 🖤₊˚ ⋆ 𝒄𝒓𝒆𝒅𝒊𝒕 𝒇𝒐𝒓 𝒑𝒂𝒕𝒕𝒊𝒓𝒂 だ ⋆ ˚🕸️๋࣭ ⭑ ‧⁺
+</h1>
+<p>เค้ารบกวนลูกค้าที่น่ารัก กด ★ ด้านล่าง ✨<br>
+🕷 พร้อมรีวิวการใช้บริการของร้านเค้าสั้นๆให้ทีน้าค้าบ 🦇.</p>
+</div>
+
+<div class="card">
+<h3>plus one for pattira だ</h3>
+<p>เลือกคะแนนจาก 1 ถึง 5</p>
+<div class="stars" id="star-container">
+<span onclick="setRating(1)">★</span>
+<span onclick="setRating(2)">★</span>
+<span onclick="setRating(3)">★</span>
+<span onclick="setRating(4)">★</span>
+<span onclick="setRating(5)">★</span>
+</div>
+<button id="submit-btn" class="submit-btn" disabled onclick="submitReview()">click here to star me.</button>
+</div>
+
+<script>
+let currentRating = 0;
+const stars = document.querySelectorAll('.stars span');
+const btn = document.getElementById('submit-btn');
+
+function setRating(rating) {
+currentRating = rating;
+stars.forEach((star, index) => {
+if (index < rating) {
+star.classList.add('active');
+} else {
+star.classList.remove('active');
+}
+});
+btn.disabled = false;
+btn.classList.add('enabled');
+}
+
+function submitReview() {
+alert('ขอบคุณที่รีวิวคะแนน ' + currentRating + ' ดาวนะค้าบ!');
+}
+</script>
+</body>
+</html>
