@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jaolove.studio16</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Mitr', sans-serif; background-color: #fefcf0; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; color: #555; }
+        .banner { width: 100%; max-width: 400px; height: auto; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .info { text-align: center; margin-bottom: 20px; }
+        .card { background-color: white; border: 2px solid #ffb7c5; border-radius: 30px; padding: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .stars { font-size: 35px; color: #ddd; cursor: pointer; margin: 10px 0; }
+        .stars span.active { color: #ff9aa2; }
+        .submit-btn { background-color: #ffdac1; border: none; padding: 10px 25px; border-radius: 20px; font-size: 16px; cursor: not-allowed; opacity: 0.6; transition: 0.3s; }
+        .submit-btn.enabled { cursor: pointer; opacity: 1; background-color: #ff9aa2; color: white; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 30px; width: 90%; max-width: 350px; position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; }
+        input, textarea { width: 100%; margin: 8px 0; padding: 12px; border: 2px solid #eee; border-radius: 15px; box-sizing: border-box; }
+        .upload-box { border: 2px dashed #ffb7c5; padding: 15px; text-align: center; cursor: pointer; border-radius: 15px; margin-bottom: 10px; color: #ff9aa2; }
+        .review-item { background: white; border: 2px solid #ffb7c5; border-radius: 25px; padding: 20px; width: 90%; max-width: 350px; margin-bottom: 15px; position: relative; }
+        .del-btn { position: absolute; top: 10px; right: 15px; cursor: pointer; color: #ff9aa2; font-weight: bold; }
+        .profile-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <img src="https://via.placeholder.com/400x200?text=Banner+Image" alt="Banner" class="banner">
+    <div class="info">
+        <h1>⁺‧⊹ ࣪ ˖ 🖤₊˚ ⋆ 𝒄𝒓𝒆𝒅𝒊𝒕 𝒇𝒐𝒓 𝒑𝒂𝒕𝒕𝒊𝒓𝒂 だ ⋆ ˚🕸️๋࣭ ⭑ ‧⁺</h1>
+        <p>ขอบคุณลูกค้าที่น่ารักที่แวะมารีวิวให้เค้าน้าค้าบ ☁️✨</p>
+    </div>
+    <div class="card">
+        <h3>plus one for pattira だ</h3>
+        <div class="stars" id="star-container">
+            <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+        </div>
+        <button id="submit-btn" class="submit-btn" disabled onclick="openModal()">กดเพื่อรีวิว</button>
+    </div>
+    <div id="reviewList" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>ฝากรีวิวถึงเค้าหน่อยน้า 💌</h2>
+            <input type="text" id="reviewTitle" placeholder="ชื่อหัวข้อรีวิว">
+            <textarea id="reviewContent" placeholder="เขียนความรู้สึกของคุณที่นี่..."></textarea>
+            <input type="text" id="userName" placeholder="ชื่อเล่นของคุณ">
+            <div class="upload-box" onclick="document.getElementById('profileInput').click()">📷 อัปโหลดรูปโปรไฟล์</div>
+            <input type="file" id="profileInput" hidden onchange="handleProfile(event)">
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">🖼 อัปโหลดรูปรีวิว</div>
+            <input type="file" id="fileInput" hidden onchange="handleImage(event)">
+            <button onclick="submitData()" style="width: 100%; padding: 12px; border-radius: 20px; border: none; background: #ff9aa2; color: white;">ส่งรีวิว</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRating = 0; let profileBase64 = ""; let reviewImgBase64 = "";
+        window.onload = fetchReviews;
+
+        function setRating(r) {
+            currentRating = r; document.querySelectorAll('.stars span').forEach((s, i) => s.className = i < r ? 'active' : '');
+            document.getElementById('submit-btn').disabled = false; document.getElementById('submit-btn').classList.add('enabled');
+        }
+        function openModal() { document.getElementById('reviewModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('reviewModal').style.display = 'none'; }
+        function handleProfile(e) { const reader = new FileReader(); reader.onload = (ev) => profileBase64 = ev.target.result; reader.readAsDataURL(e.target.files[0]); }
+        function handleImage(e) { const reader = new FileReader(); reader.onload = (ev) => reviewImgBase64 = ev.target.result; reader.readAsDataURL(e.target.files[0]); }
+
+        async function submitData() {
+            const data = { title: document.getElementById('reviewTitle').value, content: document.getElementById('reviewContent').value, name: document.getElementById('userName').value, rating: currentRating, profileImg: profileBase64, reviewImg: reviewImgBase64, timestamp: new Date().toLocaleString() };
+            await fetch("https://save-review-54d0b-default-rtdb.firebaseio.com/reviews.json", { method: "POST", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } });
+            alert('ขอบคุณสำหรับรีวิวนะคะ!'); closeModal(); fetchReviews();
+        }
+
+        async function fetchReviews() {
+            const res = await fetch("https://save-review-54d0b-default-rtdb.firebaseio.com/reviews.json");
+            const data = await res.json();
+            const list = document.getElementById('reviewList'); list.innerHTML = "";
+            for (let key in data) {
+                list.innerHTML += `
+                    <div class="review-item">
+                        <span class="del-btn" onclick="deleteReview('${key}')">✖</span>
+                        <div style="color: #ff9aa2;">${'★'.repeat(data[key].rating)}</div>
+                        <h3>${data[key].title}</h3><p>${data[key].content}</p>
+                        ${data[key].reviewImg ? `<img src="${data[key].reviewImg}" style="width:80px; border-radius:10px;">` : ''}
+                        <div style="display:flex; align-items:center; margin-top:10px;">
+                            <img src="${data[key].profileImg}" class="profile-img">
+                            <div><strong>${data[key].name}</strong><br><small>${data[key].timestamp}</small></div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        async function deleteReview(key) {
+            const pass = prompt("กรุณาระบุรหัสผ่านเพื่อลบ:");
+            if (pass === "1256") {
+                await fetch(`https://save-review-54d0b-default-rtdb.firebaseio.com/reviews/${key}.json`, { method: "DELETE" });
+                fetchReviews();
+            } else { alert("รหัสผ่านไม่ถูกต้อง"); }
+        }
+    </script>
+</body>
+</html>
