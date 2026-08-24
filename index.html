@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">ชื่อร้าน</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #141416; /* พื้นหลังหลัก สีเข้มเข้มสุด */
+            color: #E2E2E5;
+            padding: 15px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            padding: 12px 15px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #E2E2E5;
+        }
+        .icon-circle {
+            width: 38px;
+            height: 38px;
+            border: 2px solid #6E7683;
+            background: #3D444E;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .icon-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .admin-btn {
+            border: 2px solid #6E7683;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            background: #3D444E;
+            color: #E2E2E5;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 3px 0 #2E2D32;
+        }
+        .admin-btn:hover {
+            background: #6E7683;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .admin-btn.active {
+            background: #8b0000;
+            border-color: #ff4d4d;
+            color: #fff;
+            box-shadow: 0 3px 0 #500;
+        }
+
+        /* Banner Box */
+        .banner-box {
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .banner-box img.banner-bg {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 2;
+        }
+        .big-avatar {
+            width: 90px;
+            height: 90px;
+            border: 3px solid #6E7683;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            background-color: #3D444E;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .big-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .username {
+            font-size: 13px;
+            color: #E2E2E5;
+            background: #3D444E;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: 1px solid #6E7683;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 8px;
+        }
+        .profile-small {
+            text-align: center;
+        }
+        .profile-small .icon-circle {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 4px auto;
+        }
+        .stat-card {
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            border-radius: 12px;
+            padding: 10px 5px;
+            text-align: center;
+            flex: 1;
+            font-size: 11px;
+            font-weight: bold;
+            color: #A0A5B1;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+        }
+        .stat-card span {
+            font-size: 13px;
+            color: #E2E2E5;
+        }
+        .rating-bars {
+            flex: 1.2;
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            border-radius: 12px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+        .bar {
+            flex: 1;
+            height: 6px;
+            background: #141416;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #3D444E;
+        }
+        .bar-fill {
+            height: 100%;
+            background: #6E7683;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #E2E2E5;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Admin Edit Store Panel */
+        .admin-panel {
+            display: none;
+            background: #2E2D32;
+            border: 2px dashed #6E7683;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .admin-panel h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #E2E2E5;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Review Action Box */
+        .review-box {
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .emoji-list {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 24px;
+            margin: 12px 0 18px 0;
+        }
+        .emoji-btn {
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            background: #141416;
+        }
+        .emoji-btn.selected {
+            border-color: #6E7683;
+            background-color: #3D444E;
+            transform: scale(1.15);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .lets-go-btn {
+            background: #3D444E;
+            color: #E2E2E5;
+            border: 1px solid #6E7683;
+            padding: 10px 28px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .lets-go-btn:hover {
+            background: #6E7683;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: #2E2D32;
+            border: 2px solid #6E7683;
+            border-radius: 16px;
+            padding: 22px;
+            width: 100%;
+            max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            color: #E2E2E5;
+        }
+        .modal-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #E2E2E5;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #A0A5B1;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #3D444E;
+            border-radius: 10px;
+            margin-top: 6px;
+            font-size: 13px;
+            background: #141416;
+            color: #E2E2E5;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #6E7683;
+            box-shadow: 0 0 5px rgba(110, 118, 131, 0.3);
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        .upload-box {
+            width: 85px;
+            height: 85px;
+            border: 2px dashed #6E7683;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-top: 6px;
+            background: #141416;
+            font-size: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        .upload-box:hover {
+            background: #3D444E;
+        }
+        .upload-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+        }
+        .send-btn-container {
+            text-align: center;
+            margin-top: 18px;
+        }
+        .send-btn {
+            background: #3D444E;
+            color: #E2E2E5;
+            border: 1px solid #6E7683;
+            padding: 8px 35px;
+            border-radius: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .send-btn:hover {
+            background: #6E7683;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Divider */
+        .dashed-line {
+            border-top: 2px dashed #3D444E;
+            margin: 20px 0;
+        }
+
+        /* Review Card */
+        .review-card {
+            background: #2E2D32;
+            border: 2px solid #3D444E;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+        }
+        .review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #E2E2E5;
+        }
+        .review-emojis {
+            display: flex;
+            gap: 10px;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .review-details {
+            font-size: 13.5px;
+            color: #C0C5D0;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .review-img-preview {
+            max-width: 110px;
+            max-height: 110px;
+            border: 2px solid #3D444E;
+            border-radius: 8px;
+            margin-top: 6px;
+            object-fit: cover;
+        }
+        .delete-review-btn {
+            display: none;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #8b0000;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .delete-review-btn:hover {
+            background: #ff4d4d;
+        }
+        .admin-mode .delete-review-btn {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-title">
+            <div class="icon-circle" id="header-logo-icon">🏠</div>
+            <span id="store-title-text">ชื่อร้าน</span>
+        </div>
+        <button class="admin-btn" id="adminToggleBtn" onclick="handleAdmin()">Admin</button>
+    </header>
+
+    <!-- Admin Edit Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>🛠️ โหมดจัดการร้านค้า (Admin)</h3>
+        <div class="form-group">
+            เปลี่ยนชื่อร้าน:
+            <input type="text" id="editStoreName" placeholder="ชื่อร้านใหม่">
+        </div>
+        <div class="form-group">
+            เปลี่ยนชื่อ @username:
+            <input type="text" id="editUsername" placeholder="@username ใหม่">
+        </div>
+        <div class="form-group">
+            เปลี่ยนรูปโปรไฟล์หลัก:
+            <input type="file" accept="image/*" onchange="updateStoreImage(event, 'profile')">
+        </div>
+        <div class="form-group">
+            เปลี่ยนรูปแบนเนอร์:
+            <input type="file" accept="image/*" onchange="updateStoreImage(event, 'banner')">
+        </div>
+        <button class="lets-go-btn" style="width: 100%; margin-top: 10px;" onclick="saveStoreInfo()">บันทึกการเปลี่ยนแปลง</button>
+    </div>
+
+    <!-- Main Banner -->
+    <div class="banner-box">
+        <img id="banner-bg-img" class="banner-bg">
+        <div class="banner-content">
+            <div class="big-avatar" id="big-avatar-container"></div>
+            <div class="username" id="display-username">@pxtr.pattira</div>
+        </div>
+    </div>
+
+    <!-- Stats & Rating Overview -->
+    <div class="stats-container">
+        <div class="profile-small">
+            <div class="icon-circle" id="small-avatar-icon">👤</div>
+            <div style="font-size: 10px; color: #A0A5B1; font-weight: bold;" id="small-username">pxtr.pattira</div>
+        </div>
+        <div class="stat-card">รีวิวรวม<br><span id="total-reviews">0</span></div>
+        <div class="stat-card">เฉลี่ย<br><span id="avg-rating">⭐ 0.0</span></div>
+        <div class="rating-bars">
+            <div class="bar-row"><span>😞</span><div class="bar"><div class="bar-fill" id="bar-1" style="width: 0%;"></div></div></div>
+            <div class="bar-row"><span>🙁</span><div class="bar"><div class="bar-fill" id="bar-2" style="width: 0%;"></div></div></div>
+            <div class="bar-row"><span>😐</span><div class="bar"><div class="bar-fill" id="bar-3" style="width: 0%;"></div></div></div>
+            <div class="bar-row"><span>🙂</span><div class="bar"><div class="bar-fill" id="bar-4" style="width: 0%;"></div></div></div>
+            <div class="bar-row"><span>😄</span><div class="bar"><div class="bar-fill" id="bar-5" style="width: 0%;"></div></div></div>
+        </div>
+    </div>
+
+    <div class="section-title">✨ รายละเอียดความประทับใจ ✨</div>
+
+    <!-- Review Action Box -->
+    <div class="review-box">
+        <div style="font-weight: bold; color: #E2E2E5; font-size: 14px;">ส่งต่อความรู้สึกของคุณให้ร้านเรานะ 🖤</div>
+        <div class="emoji-list" id="emoji-picker">
+            <span class="emoji-btn" data-value="1">😞</span>
+            <span class="emoji-btn" data-value="2">🙁</span>
+            <span class="emoji-btn" data-value="3">😐</span>
+            <span class="emoji-btn" data-value="4">🙂</span>
+            <span class="emoji-btn selected" data-value="5">😄</span>
+        </div>
+        <button class="lets-go-btn" onclick="openModal()">let's go! 💌</button>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-title">🎀 เขียนรีวิวความประทับใจ 🎀</div>
+            
+            <div class="form-group">
+                *ประเภทงานที่สั่ง (ไม่บังคับใส่)
+                <input type="text" id="workType" placeholder="เช่น ป้ายบัญชี , ป้ายเครดิต">
+            </div>
+
+            <div class="form-group">
+                *ชื่อลูกค้า (ใช้นามแฝงได้)
+                <input type="text" id="custName" placeholder="พิมพ์ชื่อตรงนี้เลยค่ะ . .">
+            </div>
+
+            <div class="form-group">
+                *รูปโปรไฟล์ลูกค้า (ไม่บังคับใส่)
+                <div class="upload-box" onclick="document.getElementById('custImgInput').click()">
+                    📷
+                    <img id="custImgPreview" style="display:none;">
+                </div>
+                <input type="file" id="custImgInput" accept="image/*" style="display:none;" onchange="previewImage(event, 'custImgPreview', this)">
+            </div>
+
+            <div class="form-group">
+                *ความรู้สึกหลังใช้บริการ
+                <textarea id="commentText" placeholder="หากร้านบริการไม่ดี ติชมได้นะคะ ร้านจะนำไปปรับปรุงอย่างแน่นอนค่ะ"></textarea>
+            </div>
+
+            <div class="form-group">
+                *รูปผลงานที่ได้รับ (ไม่บังคับใส่)
+                <div class="upload-box" onclick="document.getElementById('workImgInput').click()">
+                    🖼️
+                    <img id="workImgPreview" style="display:none;">
+                </div>
+                <input type="file" id="workImgInput" accept="image/*" style="display:none;" onchange="previewImage(event, 'workImgPreview', this)">
+            </div>
+
+            <div class="send-btn-container">
+                <button class="send-btn" onclick="submitReview()">send! 🌟</button>
+            </div>
+            <div style="text-align: center; margin-top: 12px;">
+                <span style="font-size: 13px; color: #6E7683; cursor: pointer; text-decoration: underline;" onclick="closeModal()">ยกเลิก</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashed-line"></div>
+
+    <div style="font-size: 15px; font-weight: bold; color: #E2E2E5; margin-bottom: 12px;">💬 รีวิวทั้งหมดจากลูกค้า</div>
+
+    <!-- Review Container -->
+    <div id="reviews-container">
+        <!-- ข้อมูลจะถูกโหลดจาก Firebase มาแสดงตรงนี้ -->
+    </div>
+
+    <script>
+        const FIREBASE_URL = "https://save-review-54d0b-default-rtdb.firebaseio.com/";
+        let selectedRating = 5;
+        let custImageBase64 = "";
+        let workImageBase64 = "";
+        let isAdminLoggedIn = false;
+        let tempProfileImg = "";
+        let tempBannerImg = "";
+
+        // เลือกอีโมจิ
+        const emojiButtons = document.querySelectorAll('.emoji-btn');
+        emojiButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                emojiButtons.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedRating = btn.getAttribute('data-value');
+            });
+        });
+
+        function openModal() {
+            document.getElementById('reviewModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        // ระบบดูตัวอย่างรูปภาพฟอร์มรีวิว
+        function previewImage(event, previewId, inputElem) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById(previewId);
+                output.src = reader.result;
+                output.style.display = 'block';
+                if(previewId === 'custImgPreview') custImageBase64 = reader.result;
+                if(previewId === 'workImgPreview') workImageBase64 = reader.result;
+            };
+            if(inputElem.files[0]) {
+                reader.readAsDataURL(inputElem.files[0]);
+            }
+        }
+
+        // โหลดข้อมูลทั้งหมดจาก Firebase เมื่อเปิดเว็บ
+        window.onload = function() {
+            loadStoreInfo();
+            loadReviews();
+        };
+
+        function loadStoreInfo() {
+            fetch(FIREBASE_URL + "store.json")
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        if (data.name) {
+                            document.getElementById('store-title-text').innerText = data.name;
+                            document.getElementById('page-title').innerText = data.name;
+                        }
+                        if (data.username) {
+                            document.getElementById('display-username').innerText = data.username;
+                            document.getElementById('small-username').innerText = data.username.replace('@','');
+                        }
+                        if (data.profileImg) {
+                            document.getElementById('big-avatar-container').innerHTML = `<img src="${data.profileImg}">`;
+                            document.getElementById('small-avatar-icon').innerHTML = `<img src="${data.profileImg}">`;
+                            document.getElementById('header-logo-icon').innerHTML = `<img src="${data.profileImg}" style="border-radius:50%;">`;
+                        }
+                        if (data.bannerImg) {
+                            let bannerBg = document.getElementById('banner-bg-img');
+                            bannerBg.src = data.bannerImg;
+                            bannerBg.style.display = 'block';
+                        }
+                    }
+                }).catch(err => console.log("Error loading store info:", err));
+        }
+
+        function loadReviews() {
+            fetch(FIREBASE_URL + "reviews.json")
+                .then(res => res.json())
+                .then(data => {
+                    let reviewContainer = document.getElementById('reviews-container');
+                    reviewContainer.innerHTML = "";
+                    
+                    if (!data) {
+                        document.getElementById('total-reviews').innerText = "0";
+                        document.getElementById('avg-rating').innerText = "⭐ 0.0";
+                        return;
+                    }
+
+                    let reviewsArray = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+
+                    // เรียงจากใหม่ไปเก่า
+                    reviewsArray.reverse();
+
+                    let totalReviews = reviewsArray.length;
+                    document.getElementById('total-reviews').innerText = totalReviews;
+
+                    let totalScore = 0;
+                    let ratingCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
+
+                    reviewsArray.forEach(rev => {
+                        let rating = parseInt(rev.rating) || 5;
+                        totalScore += rating;
+                        ratingCounts[rating]++;
+
+                        let newCard = document.createElement('div');
+                        newCard.className = 'review-card';
+                        if(isAdminLoggedIn) newCard.classList.add('admin-mode');
+                        
+                        let displayName = rev.workType ? `${rev.name} (${rev.workType})` : rev.name;
+                        let avatarHTML = rev.custImage 
+                            ? `<div class="icon-circle" style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden;"><img src="${rev.custImage}" style="width:100%;height:100%;object-fit:cover;"></div>` 
+                            : `<div class="icon-circle" style="width: 28px; height: 28px; font-size: 12px;">👤</div>`;
+
+                        let workImgHTML = rev.workImage 
+                            ? `<br><img src="${rev.workImage}" class="review-img-preview">` 
+                            : '';
+
+                        const emojisArray = ['😞', '🙁', '😐', '🙂', '😄'];
+                        let chosenEmoji = emojisArray[rating - 1];
+
+                        newCard.innerHTML = `
+                            <button class="delete-review-btn" onclick="deleteReview('${rev.id}')">ลบ</button>
+                            <div class="review-header">
+                                ${avatarHTML}
+                                <span>${displayName}</span>
+                                <span style="font-size: 11px; color: #6E7683; font-weight: normal; margin-left: auto;">${rev.date}</span>
+                            </div>
+                            <div class="review-emojis">
+                                <span>${chosenEmoji}</span>
+                            </div>
+                            <div class="review-details">${rev.comment ? rev.comment : 'ไม่มีข้อความรีวิว'}</div>
+                            ${workImgHTML}
+                        `;
+                        reviewContainer.appendChild(newCard);
+                    });
+
+                    // คำนวณค่าเฉลี่ย
+                    let avg = totalReviews > 0 ? (totalScore / totalReviews).toFixed(1) : "0.0";
+                    document.getElementById('avg-rating').innerText = `⭐ ${avg}`;
+
+                    // คำนวณเปอร์เซ็นต์กราฟแท่ง
+                    for(let i=1; i<=5; i++) {
+                        let percent = totalReviews > 0 ? (ratingCounts[i] / totalReviews) * 100 : 0;
+                        document.getElementById(`bar-${i}`).style.width = percent + "%";
+                    }
+
+                }).catch(err => console.log("Error loading reviews:", err));
+        }
+
+        // กดส่งรีวิว บันทึกลง Firebase
+        function submitReview() {
+            let name = document.getElementById('custName').value.trim();
+            if (!name) {
+                alert("กรุณากรอกชื่อลูกค้าด้วยนะคะ");
+                return;
+            }
+
+            let workType = document.getElementById('workType').value.trim();
+            let comment = document.getElementById('commentText').value.trim();
+            let currentDate = new Date().toLocaleDateString('th-TH');
+
+            let newReviewData = {
+                name: name,
+                workType: workType,
+                comment: comment,
+                rating: parseInt(selectedRating),
+                custImage: custImageBase64,
+                workImage: workImageBase64,
+                date: currentDate
+            };
+
+            fetch(FIREBASE_URL + "reviews.json", {
+                method: "POST",
+                body: JSON.stringify(newReviewData),
+                headers: { "Content-Type": "application/json" }
+            }).then(res => res.json())
+              .then(data => {
+                  alert("ส่งรีวิวเรียบร้อยแล้ว ขอบคุณค่ะ! 🖤");
+                  closeModal();
+                  document.getElementById('custName').value = '';
+                  document.getElementById('workType').value = '';
+                  document.getElementById('commentText').value = '';
+                  document.getElementById('custImgPreview').style.display = 'none';
+                  document.getElementById('workImgPreview').style.display = 'none';
+                  custImageBase64 = "";
+                  workImageBase64 = "";
+                  loadReviews();
+              }).catch(err => {
+                  alert("เกิดข้อผิดพลาดในการส่งรีวิว");
+                  console.error(err);
+              });
+        }
+
+        // ระบบ Admin เช็ครหัสผ่าน
+        function handleAdmin() {
+            if (!isAdminLoggedIn) {
+                let pass = prompt("กรุณากรอกรหัสผ่าน Admin:");
+                if (pass === "310543") {
+                    isAdminLoggedIn = true;
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('adminToggleBtn').innerText = "ปิด Admin";
+                    document.getElementById('adminToggleBtn').classList.add('active');
+                    document.body.classList.add('admin-mode');
+                    
+                    document.getElementById('editStoreName').value = document.getElementById('store-title-text').innerText;
+                    document.getElementById('editUsername').value = document.getElementById('display-username').innerText;
+                    
+                    document.querySelectorAll('.review-card').forEach(card => card.classList.add('admin-mode'));
+                    alert("ยินดีต้อนรับเข้าสู่โหมดผู้ดูแลระบบ!");
+                } else if (pass !== null) {
+                    alert("รหัสผ่านไม่ถูกต้อง!");
+                }
+            } else {
+                isAdminLoggedIn = false;
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('adminToggleBtn').innerText = "Admin";
+                document.getElementById('adminToggleBtn').classList.remove('active');
+                document.body.classList.remove('admin-mode');
+                document.querySelectorAll('.review-card').forEach(card => card.classList.remove('admin-mode'));
+            }
+        }
+
+        // อัปโหลดรูปเปลี่ยนโปรไฟล์/แบนเนอร์ชั่วคราว
+        function updateStoreImage(event, type) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                if(type === 'profile') tempProfileImg = reader.result;
+                if(type === 'banner') tempBannerImg = reader.result;
+            };
+            if(inputElem = event.target.files[0]) {
+                reader.readAsDataURL(inputElem);
+            }
+        }
+
+        // บันทึกข้อมูลร้านค้าลง Firebase
+        function saveStoreInfo() {
+            let newName = document.getElementById('editStoreName').value.trim();
+            let newUser = document.getElementById('editUsername').value.trim();
+
+            let storeData = {
+                name: newName || document.getElementById('store-title-text').innerText,
+                username: newUser || document.getElementById('display-username').innerText,
+                profileImg: tempProfileImg || (document.querySelector('#big-avatar-container img') ? document.querySelector('#big-avatar-container img').src : ""),
+                bannerImg: tempBannerImg || (document.getElementById('banner-bg-img').src || "")
+            };
+
+            fetch(FIREBASE_URL + "store.json", {
+                method: "PUT",
+                body: JSON.stringify(storeData),
+                headers: { "Content-Type": "application/json" }
+            }).then(res => res.json())
+              .then(data => {
+                  alert("อัปเดตข้อมูลร้านเรียบร้อยแล้ว! ✨");
+                  loadStoreInfo();
+              }).catch(err => {
+                  alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+                  console.error(err);
+              });
+        }
+
+        // ลบรีวิวจาก Firebase
+        function deleteReview(reviewId) {
+            let pass = prompt("กรุณากรอกรหัสผ่าน Admin เพื่อยืนยันการลบรีวิว:");
+            if (pass === "310543") {
+                fetch(FIREBASE_URL + `reviews/${reviewId}.json`, {
+                    method: "DELETE"
+                }).then(res => {
+                    alert("ลบรีวิวเรียบร้อยแล้ว");
+                    loadReviews();
+                }).catch(err => {
+                    alert("เกิดข้อผิดพลาดในการลบรีวิว");
+                    console.error(err);
+                });
+            } else if (pass !== null) {
+                alert("รหัสผ่านไม่ถูกต้อง!");
+            }
+        }
+    </script>
+</body>
+</html>
